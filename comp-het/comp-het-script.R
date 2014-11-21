@@ -25,8 +25,12 @@ head(step2)
 
 step3 <- step2[,c("chr","Start","Ref","Alt","CVID_sum_217","Normal_sum_56","Gene.refgene","ExonicFunc.refgene","control_summaries.3..sum_controls_775max","CVID1156","X_1738_CVID","X_1739_CVID")]
 
+# create new column that IDs proband
+step3$proband <- colnames(step4)[ncol(step4)-3]
 
-step4 <-
+
+# create new column that sums across pro, p1, p2
+step5 <- apply(step4,1,function(row) sum(vec[ row[ncol(step4-2)] : row[ncol(step4)] ] ))
 
 for (i in 1:nrow(ped)) {
   df[,c(ped$pro,ped$p1,ped$p2)]  

@@ -1,3 +1,6 @@
+### Author: Manoj Kanagaraj
+### Notes: usage compatible with ANNOVAR refgene variant annotation headers
+
 # set wd
 setwd("C:/Users/dave/Desktop/Manoj/desktop/Lab_Documents/2014_Nov")
 
@@ -28,6 +31,23 @@ step3 <- step2[,c("chr","Start","Ref","Alt","CVID_sum_217","Normal_sum_56","Gene
 # create new column that IDs proband
 step3$proband <- colnames(step4)[ncol(step4)-3]
 
+# prep for sum
+  # convert blanks and dots to 0
+step3$CVID1156[step3$CVID1156 == ""] <- 0 # fix step specification
+step3$CVID1156[step3$CVID1156 == "."] <- 0
+
+step3$CVID1156 <- as.numeric(levels(step3$CVID1156))[step3$CVID1156] #needed in order to sum afterwards
+
+## same for other two samples .. change to step3
+step4$X_1738_CVID[step4$X_1738_CVID == ""] <- 0
+step4$X_1738_CVID[step4$X_1738_CVID == "."] <- 0
+step4$X_1739_CVID[step4$X_1739_CVID == ""] <- 0
+step4$X_1739_CVID[step4$X_1739_CVID == "."] <- 0
+step4$X_1738_CVID <- as.numeric(levels(step4$X_1738_CVID))[step4$X_1738_CVID]
+step4$X_1739_CVID <- as.numeric(levels(step4$X_1739_CVID))[step4$X_1739_CVID]
+# do the above 3 steps for all three samples, not one at a time..
+
+step4$triosum<-step4[,10]+step4[,11]+step4[,12]
 
 # create new column that sums across pro, p1, p2
 step5 <- apply(step4,1,function(row) sum(vec[ row[ncol(step4-2)] : row[ncol(step4)] ] ))

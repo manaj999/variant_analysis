@@ -100,7 +100,7 @@ for (i in 1:nrow(ped)) {
   # filter only variants with proband >=1
   step4<-subset(step3,step3[ped[i,1]]>0)
   # sum over 3 samples. could potentially change this to sum the samples specifically instead of depending upon index
-  step4$triosum<-step4[ped[i,1]]+step4[i,2]+step4[i,3]
+  step4$triosum<-step4[ped[i,1]]+step4[ped[i,2]]+step4[ped[i,3]]
   
   # filter the three samples only for those with 2
   step5<-subset(step4,step4$triosum ==2)
@@ -108,8 +108,8 @@ for (i in 1:nrow(ped)) {
   # filter only recurrent genes
   step6 <- subset(step5, step5$Gene.refgene %in% step5$Gene.refgene[duplicated(step5$Gene.refgene)])
   
-  aggp1 <- subset(aggregate(step6[ped[i,2]] ~ step6$Gene.refgene, step6, FUN=sum),aggregate(step6[ped[i,2]] ~ step6$Gene.refgene, step6, FUN=sum)[,2]>0)
-  aggp2 <- subset(aggregate(step6[ped[i,3]] ~ step6$Gene.refgene, step6, FUN=sum),aggregate(step6[ped[i,3]] ~ step6$Gene.refgene, step6, FUN=sum)[,2]>0)
+  aggp1 <- subset(aggregate(as.matrix(step6[ped[i,2]]) ~ step6$Gene.refgene, step6, FUN=sum),aggregate(as.matrix(step6[ped[i,2]]) ~ step6$Gene.refgene, step6, FUN=sum)[,2]>0)
+  aggp2 <- subset(aggregate(as.matrix(step6[ped[i,3]]) ~ step6$Gene.refgene, step6, FUN=sum),aggregate(as.matrix(step6[ped[i,3]]) ~ step6$Gene.refgene, step6, FUN=sum)[,2]>0)
   
   # filter only compound heterozygous events
   step7 <- subset(step6, step6$Gene.refgene %in% aggp1[,1] & step6$Gene.refgene %in% aggp2[,1])

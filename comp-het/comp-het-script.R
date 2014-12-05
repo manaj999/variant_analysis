@@ -17,10 +17,10 @@ control_max = 0
 parent_max = 1 # should be at least one since it is a heterozygous variant
 
 # SET WORKING DIRECTORY
-setwd("C:/Users/dave/Desktop/Manoj/desktop/Lab_Documents/2014_Nov")
+setwd("PATH to WD")
 
 # SET INPUT FILE CONTAINING ANNOVAR OUTPUT
-var = read.csv("CVID_variants_ch_script.csv", header = TRUE)
+var = read.csv("variants_comp-het.csv", header = TRUE)
 
 # SET PEDIGREE FILE
 ped = read.csv("pedigree.csv", header = TRUE, stringsAsFactors=FALSE)

@@ -1,7 +1,7 @@
 pro,p1,p2
-Patient_1,Parent_1-1,Parent_1-2
-Patient_2,Parent_2-1,Parent_2-2
-Patient_3,Parent_3-1,Parent_3-2
-Patient_4,Parent_4-1,Parent_4-2
-Patient_5,Parent_5-1,Parent_5-2
-Patient_6,Parent_6-1,Parent_6-2
+Patient_1,Parent_1.1,Parent_1.2
+Patient_2,Parent_2.1,Parent_2.2
+Patient_3,Parent_3.1,Parent_3.2
+Patient_4,Parent_4.1,Parent_4.2
+Patient_5,Parent_5.1,Parent_5.2
+Patient_6,Parent_6.1,Parent_6.2

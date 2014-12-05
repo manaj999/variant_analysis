@@ -1,0 +1,3 @@
+"chr","Start","Ref","Alt","Case_sum","Normal_sum","Gene.refgene","ExonicFunc.refgene","Control_sum","pro","p1","p2","proband"
+14,69995593,"C","A",1,1,"ADAM21","nonsynonymous SNV",0,1,1,0,"Patient_1"
+14,69995663,"G","T",1,1,"ADAM21","nonsynonymous SNV",0,1,0,1,"Patient_1"

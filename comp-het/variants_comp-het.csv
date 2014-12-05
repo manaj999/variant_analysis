@@ -1,0 +1,3 @@
+chr,Start,Ref,Alt,Case_sum,Normal_sum,Gene.refgene,ExonicFunc.refgene,Control_sum,Patient_1,Parent_1-1,Parent_1-2,Patient_2,Parent_2-1,Parent_2-2,Patient_3,Parent_3-1,Parent_3-2,Patient_4,Parent_4-1,Parent_4-2,Patient_5,Parent_5-1,Parent_5-2,Patient_6,Parent_6-1,Parent_6-2
+14,69995593,C,A,1,1,ADAM21,nonsynonymous SNV,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+14,69995663,G,T,1,1,ADAM21,nonsynonymous SNV,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0

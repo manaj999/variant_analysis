@@ -1,5 +1,6 @@
 ### Author: Manoj Kanagaraj
-### Notes: usage compatible with ANNOVAR refgene variant annotation headers
+### Notes: Usage compatible with ANNOVAR refgene variant annotation headers [ chr Start Ref Alt Case_sum  Normal_sum  Gene.refgene  ExonicFunc.refgene  Control_sum ... Sample_IDs ]
+### Notes: Additional filters may be used to pre-select variants for this script. Otherwise, this script only filters variant type and frequency based on normals and controls
 
 ### EXAMPLE CMD: R comp-het-script <ARGUMENT 1> <ARGUMENT 2> <ARGUMENT 3> <ARGUMENT 4>
 
@@ -56,7 +57,7 @@ for (i in 1:nrow(ped)) {
   # Create new column to identify trio
   step3$proband <- colnames(step3)[ncol(step3)-2]
 
-  # Clean up data before summing
+  # Clean up data before summing in case there are any blanks (. or "")
   for(j in 1:ncol(ped)){
     cur = step3[ped[i,j]]
     step3[ped[i,j]][step3[ped[i,j]] == "." | step3[ped[i,j]] == ""] <- 0
@@ -80,8 +81,8 @@ for (i in 1:nrow(ped)) {
   
     
   # Extract genes with heterozygous variants in each parent
-  aggp1 <- subset(aggregate(as.matrix(step6[ped[i,2]]) ~ step6$Gene.refgene, step6, FUN=sum),aggregate(as.matrix(step6[ped[i,2]]) ~ step6$Gene.refgene, step6, FUN=sum)[,2]>0)
-  aggp2 <- subset(aggregate(as.matrix(step6[ped[i,3]]) ~ step6$Gene.refgene, step6, FUN=sum),aggregate(as.matrix(step6[ped[i,3]]) ~ step6$Gene.refgene, step6, FUN=sum)[,2]>0)
+  aggp1 <- subset(aggregate(as.matrix(step6[ped[i,2]]) ~ step6$Gene.refgene, step6, FUN=sum), aggregate(as.matrix(step6[ped[i,2]]) ~ step6$Gene.refgene, step6, FUN=sum)[,2]>0)
+  aggp2 <- subset(aggregate(as.matrix(step6[ped[i,3]]) ~ step6$Gene.refgene, step6, FUN=sum), aggregate(as.matrix(step6[ped[i,3]]) ~ step6$Gene.refgene, step6, FUN=sum)[,2]>0)
   
   # Filter for genes that have recurrent heterozygous events, with at least one from each parent. This suggests that it is a heterozygous variant.
   step7 <- subset(step6, step6$Gene.refgene %in% aggp1[,1] & step6$Gene.refgene %in% aggp2[,1])
@@ -97,4 +98,4 @@ for (i in 1:nrow(ped)) {
 }  
 
 # Output file
-write.table(output, file = "comp-het_out.csv",row.names=FALSE, sep=",")
+write.table(output, file = "comp-het_out.csv", row.names=FALSE, sep=",")

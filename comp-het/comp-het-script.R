@@ -12,36 +12,33 @@
 
 ## SET FILTER PARAMETERS HERE
 # Control variants from 6500 exomes, etc.
-control_max = 0
+control_max = 10
 
 # Variants from all patients' parents
-parent_max = 1 # should be at least one since it is a heterozygous variant
+parent_max = 10 # should be at least one since it is a heterozygous variant
 
 # SET WORKING DIRECTORY
-setwd("PATH to WD")
+# setwd("PATH to WD")
 
 # SET INPUT FILE CONTAINING ANNOVAR OUTPUT
-var = read.csv("variants_comp-het.csv", header = TRUE)
+var = read.csv("rare-var_for_comp-het.csv", header = TRUE, check.names = FALSE)
 
 # SET PEDIGREE FILE
-ped = read.csv("pedigree.csv", header = TRUE, stringsAsFactors=FALSE)
+ped = read.csv("pedigree_01-22.csv", header = TRUE, stringsAsFactors=FALSE, check.names = FALSE)
 
 # SET OTHER VARIABLES
 output <- data.frame()
 
 ## PART 1: SAMPLE INDEPENDENT
 
-# Sort variants by gene name
-var[order("Gene.refgene")]
-
 # Filter only nonsynonymous or stopgain/stoploss variants
 # **Edit this step if you wish to include additional variant types**
-step1 <- subset(var, var$ExonicFunc.refgene == "nonsynonymous SNV" | var$ExonicFunc.refgene == "stoploss" | var$ExonicFunc.refgene == "stopgain")
+step1 <- var[var$ExonicFunc.refgene == "nonsynonymous SNV" | var$ExonicFunc.refgene == "stoploss" | var$ExonicFunc.refgene == "stopgain",,drop=F]
 stopifnot(nrow(step1)>0)
 
 
 # Filter variants based on rareness using parameters set above
-step2 <- subset(step1, step1[,9] <= control_max & step1[,6] <= parent_max)
+step2 <- subset(step1, step1[,'Control_sum'] <= control_max & step1[,'Normal_sum'] <= parent_max)
 stopifnot(nrow(step2)>0)
 
 
@@ -52,24 +49,30 @@ for (i in 1:nrow(ped)) {
 
   # Extract columns for current trio
   header = colnames(step2)
-  step3 <- step2[,c(header[1],header[2],header[3],header[4],header[5],header[6],header[7],header[8],header[9],ped[i,1],ped[i,2],ped[i,3])]
+  step3 <- step2[,c(header[1:9],ped[i,1],ped[i,2],ped[i,3])]
   
   # Create new column to identify trio
-  step3$proband <- colnames(step3)[ncol(step3)-2]
+  step3$proband <- colnames(step3[,ped[i,1],drop=F])
 
   # Clean up data before summing in case there are any blanks (. or "")
+  #step3[step3[,ped[i,]]=="."|is.na(step3[,ped[i,]]), c(ped[i,])] <- 0
+
   for(j in 1:ncol(ped)){
     cur = step3[ped[i,j]]
     step3[ped[i,j]][step3[ped[i,j]] == "." | step3[ped[i,j]] == ""] <- 0
     step3[ped[i,j]] <- lapply(step3[ped[i,j]], function(x) as.numeric(as.character(x)))
   }
  
+  
+  # Sort variants by gene name
+  step3 <- step3[order(step3$Gene.refgene),]
+  
   # Filter only variants that occur in proband
   step4<-subset(step3,step3[ped[i,1]]>0)
   if(nrow(step4)==0) {next}
   
   # Sum over the three samples
-  step4$triosum<-step4[ped[i,1]]+step4[ped[i,2]]+step4[ped[i,3]]
+  step4$triosum<-step4[ped[i,1]]+step4[ped[i,2]]+step4[ped[i,3]] #apply
   
   # Filter the three samples only for those with 2. This suggests that it is a heterozygous variant.
   step5<-subset(step4,step4$triosum ==2)
